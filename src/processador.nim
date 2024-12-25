@@ -53,7 +53,7 @@ proc setR(self: Processador, r: int, v: int) =
 # | addi      | registrador | registrador | valor       |
 # | sub       | registrador | registrador | registrador |
 # | subi      | registrador | registrador | valor       |
-# |
+# | 
 # | ssc       | valor       |
 # | syscall   
 # | showmem 
