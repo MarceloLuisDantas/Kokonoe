@@ -78,6 +78,7 @@ proc ssc(self: Processador, v: int) =
 proc printInteiro(self: Processador) =
     echo self.getR(regToIndex("$a1"))
 
+# Mostra todos os valores da memoria
 proc showMem(self: Processador) =
     let regisNumber = [
         ("r0", "ZERO"), 

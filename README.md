@@ -9,22 +9,22 @@ Kokonoe é um simulador de um Processador simples, tendo um Assembly similar ao 
 | #r1 .. r4   | $a1 .. $a4  | SIM      | Argumentos para procedimentos 
 | #r5, r6     | $v1, $v2    | SIM      | Retornos de procedimentos
 | #r7 .. r17  | $t1 .. $t10 | SIM      | Valores temporarios
-| #r31        | $rr         | NÂO      | Reservado
+| #r31        | $sv         | SIM      | Reservado para setar chamada de syscall
 
 
 ### #r0 ou $ZERO
 Valor ZERO constante, qualquer valor adicionado a ele sera ignorando, e sempre que for chamado sera recebido 0. Pode ser utilizado quando o resultado de uma operação não é necessario, porem ela necessita um lugar para salvar o resultado, jogando o resultado para ZERO a operação sera possivel 
 
-### #r1..#r4 ou $a1..$a4
+### #r1..#r4 ou $a1..$a4 (Argumentos)
 Registradores reservados para serem utilizados para armazenar os argumentos de um procedimento. Esses registradores não são zerados automaticamente.
 
-### #r5 e #r6 ou $v1 e $v2
+### #r5 e #r6 ou $v1 e $v2 (Valores)
 Registradores reservados para serem utilizados para armazenar os retornos de um procedimento. Esses registradores não são zerados automaticamente.
 
-### #r7..#r17 ou $t1..t10
+### #r7..#r17 ou $t1..t10 (Temporario)
 Registradores reservados para uso temporario, as variaveis do seu programa.
 
-### #r31
+### #r31 ou $sv (Syscall Value)
 Registrador reservado para uso interno
 
 ## Instruções
