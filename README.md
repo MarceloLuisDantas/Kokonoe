@@ -41,6 +41,8 @@ Registrador reservado para uso interno
 - `addi #reg1 #reg2 valor` - Aloca em reg1 a soma do valore em reg 2 e o valor passado
 - `sub #reg1 #reg2 #reg3` - Aloca em reg1 a subtração entre os valores de reg2 e reg3
 - `subi #reg1 #reg2 valor` - Aloca em reg1 a subtração do valore em reg 2 com o valor passado
+- `li #reg1 valor` - Aloca em reg1 o valor passado, é apenas um atalho para `addi #reg1 $ZERO valor`
+- `move #reg1 #reg2` - Move o valor de reg2 para reg1
 - `ssc valor` - seta o registrador responsavel por chamar syscalls
 - `syscall` - Realiza a chamada de uma Syscall utilizando
 
