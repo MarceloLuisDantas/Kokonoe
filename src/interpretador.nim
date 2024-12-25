@@ -17,7 +17,9 @@
 
 import std/strutils
 
-let instructions = ["add", "addi", "sub", "subi", "ssc", "syscall", "showmem"]
+let instructions = [
+    "add", "addi", "sub", "subi", "mov", "li", "ssc", "syscall", "showmem"
+]
 
 func tokenizer(entrada: string): seq[string] =
     return entrada.split(" ")

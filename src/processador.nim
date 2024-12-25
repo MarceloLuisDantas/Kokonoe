@@ -53,7 +53,8 @@ proc setR(self: Processador, r: int, v: int) =
 # | addi      | registrador | registrador | valor       |
 # | sub       | registrador | registrador | registrador |
 # | subi      | registrador | registrador | valor       |
-# | 
+# | mov       | registrador | registrador
+# |
 # | ssc       | valor       |
 # | syscall   
 # | showmem 
@@ -70,6 +71,22 @@ proc addi(self: Processador, r1: string, r2: string, v: string) =
     var i2: int = regToIndex(r2)
     self.setR(i1, self.getR(i2) + v.parseInt())    
     
+proc sub(self: Processador, r1: string, r2: string, r3: string) =
+    var i1: int = regToIndex(r1)
+    var i2: int = regToIndex(r2)
+    var i3: int = regToIndex(r3)
+    self.setR(i1, self.getR(i2) - self.getR(i3))
+
+proc subi(self: Processador, r1: string, r2: string, v: string) =
+    var i1: int = regToIndex(r1)
+    var i2: int = regToIndex(r2)
+    self.setR(i1, self.getR(i2) - v.parseInt())    
+    
+proc mov(self: Processador, r1: string, r2: string) =
+    var i1: int = regToIndex(r1)
+    var i2: int = regToIndex(r2)
+    self.setR(i1, self.getR(i2))
+
 # Seta qual syscall sera chamada
 proc ssc(self: Processador, v: int) =
     self.setR(regToIndex("$sv"), v)
@@ -100,17 +117,18 @@ proc callSyscall(self: Processador) =
       of 1 : self.printInteiro()
       else : return
 
-
 # Recebe um comando e seus argumentos e executa
 proc exce*(self: Processador, comando: string, args: seq[string]) =
     case comando
       of "add"     : self.add(args[0], args[1], args[2]) 
       of "addi"    : self.addi(args[0], args[1], args[2]) 
+      of "sub"     : self.sub(args[0], args[1], args[2])
+      of "subi"    : self.subi(args[0], args[1], args[2])
+      of "li"      : self.addi(args[0], "$ZERO", args[1])
+      of "mov"     : self.mov(args[0], args[1])
       of "ssc"     : self.ssc(args[0].parseInt())
       of "syscall" : self.callSyscall()
       of "showmem" : self.showMem()
-
-
 
 # Descrição do Processador
 proc about*(self: Processador) =
