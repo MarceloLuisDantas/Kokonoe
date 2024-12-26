@@ -83,12 +83,28 @@ proc sintaxeMove(argumentos: seq[string]): string =
         return "1 ou mais registradores invalidos"
     return "ok"
 
+# Detecta erro de sintaxe em li
+proc sintaxeLi(args: seq[string]): string =
+    if args.len() != 2 :
+        return "Move recebe exatamente 3 argumentos"
+
+    if not registradorValido(args[0]) :
+        return "Registrador de destino invalido"
+        
+    try :
+        discard parseInt(args[1])
+        return "ok"
+    except :
+        return "Valor passado invalido"
+
+
 
 
 proc checkSintaxe(instrucao: string, args: seq[string]): string =
     case instrucao :
       of "add", "sub" : return sintaxeAddSub(args)
       of "move"       : return sintaxeMove(args)
+      of "li"         : return sintaxeLi(args)
 
 # Detecta erros de sintaxe
 proc detecaErrosSintaxe(script: seq[string]): seq[string] =

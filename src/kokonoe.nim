@@ -1,4 +1,5 @@
 import std/os
+import strutils
 import processador
 import interpretador
 
@@ -18,7 +19,10 @@ proc vi(arquivo: string) =
     discard execShellCmd("vi ./scripts/" & arquivo)
 
 proc run(arquivo: string) =
-    interpretador.execScript(proce, arquivo)
+    if arquivo.split(".")[1] != "kn" :
+        echo "Formato de arquivo invalido"
+    else :
+        interpretador.execScript(proce, arquivo)
 
 proc repl() =
     proce.about()
@@ -38,9 +42,11 @@ proc repl() =
 proc main() =
     let parametros = commandLineParams()
     if (parametros.len() == 0) :
-        # repl()
-        echo ""
+        repl()
     else :
-        interpretador.execScript(proce, parametros[0])
+        if parametros[0].split(".")[1] != "kn" :
+            echo "Formato de arquivo invalido"
+        else :
+            interpretador.execScript(proce, parametros[0])
 
 main()

@@ -1,0 +1,11 @@
+
+    ; Li deve receber exatamente 2 parametros, 1 registrador e 1 valor
+    ; teste de quantidade de parametros
+    li $t1 $t2 $t3                      ; 3 parametros
+    li $t1                              ; 1 parametro
+    li                                  ; nem um parametros
+
+    ; teste de validação de parametros
+    li 100 $t1
+    li $zs 100
+    li $t1 $xz
