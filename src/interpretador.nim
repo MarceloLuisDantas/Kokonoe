@@ -19,8 +19,12 @@ import strutils
 import sequtils
 import processador
 
-let instructions = [
+let instructions = @[
     "add", "addi", "sub", "subi", "move", "li", "ssc", "syscall", "showmem"
+]
+
+let comandos = @[
+    "ls", "cat", "exit", "vi", "touch", "run"
 ]
 
 func tokenizer(entrada: string): seq[string] =
@@ -30,11 +34,11 @@ proc getComando*(entrada: string): seq[string] =
     var tokens = tokenizer(entrada)
     proc filtraEspaco(x: string): bool = x != ""
     tokens.keepIf(filtraEspaco)
-    if instructions.find(tokens[0]) != -1 :
+    if concat(instructions, comandos).find(tokens[0]) != -1 :
         return tokens
 
 proc execScript*(proce: Processador, file: string) =
-    var x = readFile(file)
+    var x = readFile("./scripts/" & file)
     for linha in x.split("\n") :
         let tokens  = getComando(linha)
         let instrucao = tokens[0]

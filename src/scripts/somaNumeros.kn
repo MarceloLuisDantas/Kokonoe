@@ -1,5 +1,5 @@
 li          $t1 20
-li          $t2 22
+li          $t2 32
 add         $t1 $t1 $t2
 move        $a1 $t1
 ssc         1

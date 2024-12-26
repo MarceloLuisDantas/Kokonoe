@@ -1,25 +1,40 @@
 import std/os
 import processador
-from interpretador import getComando
+import interpretador
 
 var proce = newProcessador()
 
 proc input() : string =
-    stdout.write("Kokonoe Prompt |> ")
+    stdout.write("\nKokonoe Prompt |> ")
     return stdin.readLine()
+
+proc ls() =
+    discard execShellCmd("ls ./scripts")
+
+proc cat(arquivo: string) =
+    discard execShellCmd("cat ./scripts/" & arquivo)
+
+proc vi(arquivo: string) =
+    discard execShellCmd("vi ./scripts/" & arquivo)
+
+proc run(arquivo: string) =
+    interpretador.execScript(proce, arquivo)
 
 proc repl() =
     proce.about()
     while true :
         let entrada = input()
-        let tokens  = getComando(entrada)
-        
+        let tokens = getComando(entrada)
         let instrucao = tokens[0]
-        if (instrucao == "exit") :
-            break
-
         let args = tokens[1..tokens.len - 1]
-        proce.exce(instrucao, args)
+        case instrucao
+          of "exit" : break
+          of "ls"   : ls()
+          of "cat"  : cat(args[0])
+          of "vi"  : vim(args[0])
+          of "run"  : run(args[0])
+          else :
+            proce.exce(instrucao, args)
 
 proc main() =
     let parametros = commandLineParams()

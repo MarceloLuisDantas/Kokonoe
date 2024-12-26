@@ -146,12 +146,12 @@ proc about*(self: Processador) =
   *%%,,**   .**.*%,(%#(@@&%%,%%/#    | 
   %%,,**       *,#,/*,*/,,(&%#(,#    | 
  ,%%,,*       ., #***&@&@@*/##,,#    | 
-%.*%,,*       *,,,%%,*%%/&& ,,,,*    | 
+,.*%,,*       *,,,%%,*%%/&& ,,,,*    | 
 %.,#%,,        ,,,,,,/%%    ,,,,     | 
 ..,,#..         ******@@*#  .,,,     | 
- ..,,,(,        .*,*%&&&,##  ,,,     | 
+ ..,,,(,        .*,*%&&&,##  ,,,     | Digite exit para fechar
   ...,,        .,,.%%%%..((% ,,,     | 
 
-All Copyright of Kokonoe Character reserved to Arc System Works - Team Blue
-"""
+All Copyright of Kokonoe Character reserved to Arc System Works - Team Blue"""
+
     echo Kokonoe
