@@ -39,7 +39,8 @@ proc repl() =
 proc main() =
     let parametros = commandLineParams()
     if (parametros.len() == 0) :
-        repl()
+        # repl()
+        echo ""
     else :
         interpretador.execScript(proce, parametros[0])
 

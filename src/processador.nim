@@ -13,6 +13,13 @@ type Processador* = ref object
 func newProcessador*(): Processador =
     Processador()
 
+type Instrucao* = tuple
+    op: string
+    args: seq[string]
+
+func newInstrucao*(ins: string, args: seq[string]): Instrucao =
+    return (ins, args)
+
 # Converte o nome do registrador para o indice no array
 func regToIndex(registrador: string) : int =
     case registrador
@@ -34,7 +41,10 @@ func regToIndex(registrador: string) : int =
       of "#r15", "$t9"   : return 15
       of "#r16", "$t10"  : return 16
       of "#r31", "$sv"   : return 31
-      else : return 0
+      else : return -1
+
+func registradorValido*(registrador: string): bool =
+    return regToIndex(registrador) != -1
 
 # Get Set Registradores
 func getR(self: Processador, r: int): int = 
@@ -113,8 +123,9 @@ proc callSyscall(self: Processador) =
       else : return
 
 # Recebe um comando e seus argumentos e executa
-proc exce*(self: Processador, comando: string, args: seq[string]) =
-    case comando
+proc exce*(self: Processador, instrucao: Instrucao) =
+    let args = instrucao.args
+    case instrucao.op
       of "add"     : self.add(args[0], args[1], args[2]) 
       of "addi"    : self.addi(args[0], args[1], args[2]) 
       of "sub"     : self.sub(args[0], args[1], args[2])
