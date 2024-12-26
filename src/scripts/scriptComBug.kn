@@ -1,9 +1,13 @@
 
-
+    teste4
     li          $t1 $20         ; salva 20 no registrador t1
     li          t2 32           ; salva 32 no registrador t2
     add         $t1 $t1 199     ; soma 32 ao registrador t1
+    teste3
     move        $a1 $t1          move o valor de t1 para a1
     ssc                        ; seta o valor de syscall para printinteiro
+    teste1
+    teste2
+    
     syscall     2                
 
