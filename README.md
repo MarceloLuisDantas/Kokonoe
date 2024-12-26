@@ -1,6 +1,18 @@
 # Kokonoe
 Kokonoe é um simulador de um Processador simples, tendo um Assembly similar ao conjunto de instruções e registradores MIPS. 
 
+## Basico do Basico
+Os scripts executaveis possuem a extenção .kn, eles não possuem identação obrigatoria, porem cada comando precisa ser escrito em 1 linha e 1 linha apenas. Os comentarios são possiveis, tudo que estiver depois de um ; sera considerado um comentario.
+
+Existem 2 modos de uso, é possivel tanto abrir Kokonoe no modo interativo, onde você tera um prompt simples para executar comandos, e como modo interpretador, onde você pode passar um script .kn para ser executado.
+
+## Comandos
+Kokonoe suporta alguns comandos comuns de shell, dentre eles;
+- ls  : lista os scripts existentes na pasta interna script
+- cat : lista o conteudo de um script especifico
+- run : permite executar scripts mesmo estando no modo interativo
+- vi  : abre o vi para que você possa editar os scripts
+
 ## Registradores
 `cada registrador é implementado como um inteiro de 64 bits`
 | Registrador | Nome        | Editavel | Descrição  
@@ -9,8 +21,8 @@ Kokonoe é um simulador de um Processador simples, tendo um Assembly similar ao 
 | #r1 .. r4   | $a1 .. $a4  | SIM      | Argumentos para procedimentos 
 | #r5, r6     | $v1, $v2    | SIM      | Retornos de procedimentos
 | #r7 .. r17  | $t1 .. $t10 | SIM      | Valores temporarios
+| #r18 .. r30 |             | SIM      | em trabalho, podem ser utilizados por hora
 | #r31        | $sv         | SIM      | Reservado para setar chamada de syscall
-
 
 ### #r0 ou $ZERO
 Valor ZERO constante, qualquer valor adicionado a ele sera ignorando, e sempre que for chamado sera recebido 0. Pode ser utilizado quando o resultado de uma operação não é necessario, porem ela necessita um lugar para salvar o resultado, jogando o resultado para ZERO a operação sera possivel 
@@ -55,3 +67,7 @@ Imprime na tela o valor armazenado no registrador $a1
 
 # TO DO
 Converter a exceução de scripts e de um for indo linha por linha, para cada comando ser um objeto dentro de uma linha de comandos
+
+Implementar a capacidade de voltar para um ponto especifico do script (goto), isso permitira a implementação de procedimentos e condicionais
+
+Implementação de uma memoria fora os registradores
