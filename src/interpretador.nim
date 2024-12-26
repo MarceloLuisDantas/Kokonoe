@@ -66,7 +66,7 @@ proc detectaInstrucaoNaoExistente(script: seq[string]): seq[string] =
 proc registradoresValidos(regis: seq[string]): bool =
     let validos = regis.filter(proc(a: string): bool = registradorValido(a))
     return validos.len() == regis.len()
-
+    
 # Detecta erro de sintaxe em add e sub
 proc sintaxeAddSub(argumentos: seq[string]): string =
     if argumentos.len() != 3 :
@@ -75,9 +75,20 @@ proc sintaxeAddSub(argumentos: seq[string]): string =
         return "1 ou mais registradores invalidos"
     return "ok"
 
+# Detecta erro de sintaxe em move
+proc sintaxeMove(argumentos: seq[string]): string =
+    if argumentos.len() != 2 :
+        return "Move recebe exatamente 3 argumentos"
+    if not registradoresValidos(argumentos) :
+        return "1 ou mais registradores invalidos"
+    return "ok"
+
+
+
 proc checkSintaxe(instrucao: string, args: seq[string]): string =
     case instrucao :
       of "add", "sub" : return sintaxeAddSub(args)
+      of "move"       : return sintaxeMove(args)
 
 # Detecta erros de sintaxe
 proc detecaErrosSintaxe(script: seq[string]): seq[string] =

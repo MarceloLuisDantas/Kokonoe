@@ -1,0 +1,11 @@
+
+    ; Move deve receber exatament 2 parametros, 2 registradores
+    ; teste quantidade de parametros
+    move $t1 $t2 $t3                    ; 3 registradores
+    move $t1                            ; 1 registrador
+    move                                ; 0 registradores
+
+    ; teste de validade de registradores
+    move 123 123                        ; passando valores 
+    move $zx $t1                        ; passando registrador invalido
+    

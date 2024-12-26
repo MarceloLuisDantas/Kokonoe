@@ -1,6 +1,4 @@
 
-    ; script para detectar erro na sintaxe
-
     ; Add deve receber exatamente 3 argumentos, 3 registradores
     ; teste de quantidade de argumentos
     add     $t1 $t2 $t3 $t4           ; 4 registradores
