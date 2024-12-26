@@ -68,6 +68,7 @@ proc checkSintaxe(instrucao: string, args: seq[string]): string =
       of "move"       : return sintaxeMove(args)
       of "li"         : return sintaxeLi(args)
       of "ssc"        : return sintaxeSsc(args)
+      of "syscall"    : return sintaxeSyscall(args)
       else : return "O dev esqueceu de implementar isso pelo visto"
 
 # Detecta erros de sintaxe

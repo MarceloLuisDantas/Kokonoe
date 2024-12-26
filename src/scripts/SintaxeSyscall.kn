@@ -1,0 +1,4 @@
+
+    ; Syscall não recebe argumentos
+    ; teste quantidade de argumentos
+    syscall 1

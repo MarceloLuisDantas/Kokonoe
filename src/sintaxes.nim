@@ -48,3 +48,7 @@ proc sintaxeSsc*(args: seq[string]): string =
         return "ok"
     except :
         return "Valor passado invalido"
+
+proc sintaxeSyscall*(args: seq[string]): string =
+    if args.len() != 0 :
+        return "Syscall não recebe nem um parametro"

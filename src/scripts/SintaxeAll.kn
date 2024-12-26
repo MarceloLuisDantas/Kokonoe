@@ -51,5 +51,9 @@
 
     ; teste validade de parametros
     ssc $1
-    ssc a          
+    ssc a
+
+    ; Syscall não recebe argumentos
+    ; teste quantidade de argumentos
+    syscall 1          
 
