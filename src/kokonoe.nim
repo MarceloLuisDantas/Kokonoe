@@ -24,14 +24,14 @@ proc repl() =
     proce.about()
     while true :
         let entrada = input()
-        let tokens = getComando(entrada)
+        let tokens = getComandoRepl(entrada)
         let instrucao = tokens[0]
         let args = tokens[1..tokens.len - 1]
         case instrucao
           of "exit" : break
           of "ls"   : ls()
           of "cat"  : cat(args[0])
-          of "vi"  : vi(args[0])
+          of "vi"   : vi(args[0])
           of "run"  : run(args[0])
           else :
             proce.exce(instrucao, args)
