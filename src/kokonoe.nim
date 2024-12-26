@@ -31,7 +31,7 @@ proc repl() =
           of "exit" : break
           of "ls"   : ls()
           of "cat"  : cat(args[0])
-          of "vi"  : vim(args[0])
+          of "vi"  : vi(args[0])
           of "run"  : run(args[0])
           else :
             proce.exce(instrucao, args)
