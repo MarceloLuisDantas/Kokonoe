@@ -51,3 +51,7 @@ Registrador reservado para uso interno
 ## Syscalls
 ### ssc 1 - printInteiro
 Imprime na tela o valor armazenado no registrador $a1
+
+
+# TO DO
+Converter a exceução de scripts e de um for indo linha por linha, para cada comando ser um objeto dentro de uma linha de comandos

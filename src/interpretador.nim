@@ -27,14 +27,8 @@ let comandos = @[
     "ls", "cat", "exit", "vi", "touch", "run"
 ]
 
-type Comando = tuple
-    instrucao: string
-    args: seq[string]
-
-
-
-func tokenizer(entrada: string): seq[Comando] =
-    var tokens = entrada.split(" ")
+func tokenizer(entrada: string): seq[string] =
+    return entrada.split(" ")
 
 proc getComandoRepl*(entrada: string): seq[string] =
     var tokens = tokenizer(entrada)
@@ -56,7 +50,10 @@ func limpaScript(script: seq[string]): seq[string] =
     var limpo = newSeqOfCap[string](script.len() - int(float(script.len()) * 0.2))
     for linha in script :
         if not linhaVazia(linha) :
-            limpo.add(linha.strip().split(";")[0])
+            let semEspacoComecoFim = linha.strip()
+            let semComentario = semEspacoComecoFim.split(";")[0]
+            let semEspaco = semComentario.split(" ").filter(filtraEspaço)
+            limpo.add(semEspaco.join(" "))
     return limpo
 
 proc execScript*(proce: Processador, file: string) =
@@ -64,6 +61,7 @@ proc execScript*(proce: Processador, file: string) =
     var linhas = x.split("\n")
     let scriptLimpo = limpaScript(linhas)
     for linha in scriptLImpo :
+        echo linha
         let tokens = getComandoScript(linha)
         if tokens[0] != " " :
             let instrucao = tokens[0]
