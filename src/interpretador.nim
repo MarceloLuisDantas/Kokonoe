@@ -14,10 +14,10 @@
 # sub  $t1 $t2 $t3 - t1 = t2 - t3
 # subi $t1 $t2 100 - t1 = t2 - 100
 
+import processador
+import sintaxes
 import strutils
 import sequtils
-import processador
-import sugar
 
 let instructions = @[
     "add", "addi", "sub", "subi", "move", "li", "ssc", "syscall", "showmem"
@@ -39,7 +39,7 @@ func filtraEspaço(entrada: string): bool =
 func tokenizer(entrada: string): Instrucao =
     let tokens = entrada.split(" ")
     if tokens.len() == 1 :
-        return newInstrucao(tokens[0], @[""])
+        return newInstrucao(tokens[0], @[])
     return newInstrucao(tokens[0], tokens[1..^1])
 
 # Faz a limpeza do script, revomendo espaços extras e comentarios
@@ -62,49 +62,13 @@ proc detectaInstrucaoNaoExistente(script: seq[string]): seq[string] =
         if instructions.find(instrucao) == -1 :
             result.add("Erro na linha " & $(i+1) & " instrução \"" & instrucao & "\" não reconhecido")       
 
-# Detecção de registradores validos
-proc registradoresValidos(regis: seq[string]): bool =
-    let validos = regis.filter(proc(a: string): bool = registradorValido(a))
-    return validos.len() == regis.len()
-    
-# Detecta erro de sintaxe em add e sub
-proc sintaxeAddSub(argumentos: seq[string]): string =
-    if argumentos.len() != 3 :
-        return "Add e Sub recebem exatamente 3 argumentos"
-    if not registradoresValidos(argumentos) :
-        return "1 ou mais registradores invalidos"
-    return "ok"
-
-# Detecta erro de sintaxe em move
-proc sintaxeMove(argumentos: seq[string]): string =
-    if argumentos.len() != 2 :
-        return "Move recebe exatamente 3 argumentos"
-    if not registradoresValidos(argumentos) :
-        return "1 ou mais registradores invalidos"
-    return "ok"
-
-# Detecta erro de sintaxe em li
-proc sintaxeLi(args: seq[string]): string =
-    if args.len() != 2 :
-        return "Move recebe exatamente 3 argumentos"
-
-    if not registradorValido(args[0]) :
-        return "Registrador de destino invalido"
-        
-    try :
-        discard parseInt(args[1])
-        return "ok"
-    except :
-        return "Valor passado invalido"
-
-
-
-
 proc checkSintaxe(instrucao: string, args: seq[string]): string =
     case instrucao :
       of "add", "sub" : return sintaxeAddSub(args)
       of "move"       : return sintaxeMove(args)
       of "li"         : return sintaxeLi(args)
+      of "ssc"        : return sintaxeSsc(args)
+      else : return "O dev esqueceu de implementar isso pelo visto"
 
 # Detecta erros de sintaxe
 proc detecaErrosSintaxe(script: seq[string]): seq[string] =
@@ -116,16 +80,11 @@ proc detecaErrosSintaxe(script: seq[string]): seq[string] =
                 "Erro de sintaxe na linha " & $(i+1) & " - \"" & v & "\" \n" & 
                 "    - " & err & "\n"
             )
-    
-
-
-
 
 proc getComandoRepl*(entrada: string): Instrucao =
     var operacao = tokenizer(entrada)
     if concat(instructions, comandos).find(operacao.op) != -1 :
         return operacao
-
 
 # Executa um script
 proc execScript*(proce: Processador, file: string) =

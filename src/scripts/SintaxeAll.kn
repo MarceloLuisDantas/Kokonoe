@@ -1,0 +1,55 @@
+
+    ; Add deve receber exatamente 3 argumentos, 3 registradores
+    ; teste de quantidade de argumentos
+    add     $t1 $t2 $t3 $t4           ; 4 registradores
+    sub     $t1 $t2                   ; 2 registradores
+    add     $t1                       ; 1 registradores
+    sub                               ; 0 registradores
+
+    ; teste do tipo de argumentos
+    add     $t1 $t2 100               ; 2 registradores e 1 valor
+    sub     $t1 100 $t2          
+    add     100 $t2 $t3               ; numero no lugar do registrador alvo
+    sub     $t1 100 100               ; 2 numeros
+    add     100 100 100                ; 3 numeros
+    
+    ; teste de registradores
+    sub     $da $t1 $t2               ; registrador alvo invalido
+    add     $a1 $32 $12               ; registradores invalidos
+
+
+
+    ; Li deve receber exatamente 2 parametros, 1 registrador e 1 valor
+    ; teste de quantidade de parametros
+    li $t1 $t2 $t3                      ; 3 parametros
+    li $t1                              ; 1 parametro
+    li                                  ; nem um parametros
+
+    ; teste de validação de parametros
+    li 100 $t1
+    li $zs 100
+    li $t1 $xz
+     
+
+    
+    ; Move deve receber exatament 2 parametros, 2 registradores
+    ; teste quantidade de parametros
+    move $t1 $t2 $t3                    ; 3 registradores
+    move $t1                            ; 1 registrador
+    move                                ; 0 registradores
+
+    ; teste de validade de registradores
+    move 123 123                        ; passando valores 
+    move $zx $t1                        ; passando registrador invalido
+    
+
+    
+    ; ssc recebe exatamente 1 parametro, 1 inteiro
+    ; teste quantidade de parametros
+    ssc 1 2
+    ssc     
+
+    ; teste validade de parametros
+    ssc $1
+    ssc a          
+

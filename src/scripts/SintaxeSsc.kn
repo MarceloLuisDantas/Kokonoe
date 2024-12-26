@@ -1,0 +1,9 @@
+
+    ; ssc recebe exatamente 1 parametro, 1 inteiro
+    ; teste quantidade de parametros
+    ssc 1 2
+    ssc     
+
+    ; teste validade de parametros
+    ssc $1
+    ssc a
