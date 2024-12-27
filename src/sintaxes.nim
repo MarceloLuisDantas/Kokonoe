@@ -93,5 +93,16 @@ proc sintaxeJump*(linha: seq[string]): string =
 
     return "ok"
 
-
+proc sintaxeJal*(linha: seq[string]): string =
+    if linha.len() != 1 :
+        return "jal so recebe 1 parametro, o ponto de jump"
     
+    if not apenasLetras(linha[0]) :
+        return "pontos de jump so podem possuir letras"
+
+    return "ok"
+
+proc sintaxeJr*(linha: seq[string]): string =
+    if linha.len() != 0 :
+        return "jr não recebe parametros"
+    return "ok"

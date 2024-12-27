@@ -1,0 +1,12 @@
+_soma
+    jump soma
+    jump 123
+    jump 
+    jump soma 123 
+    jr 
+    jr soma
+    jr 123 
+    jal soma
+    jal
+    jal 123 
+    jal soma 123

@@ -9,8 +9,7 @@
 # |
 # | jump      | valor
 # | jal       | valor
-# | jr        | registrador
-# | jb        
+# | jr      
 # |
 # | ssc       | valor       |
 # | syscall   
@@ -29,7 +28,7 @@ import tables
 
 let instructions = @[
     "add", "addi", "sub", "subi", "move", "li", 
-    "jump", "jal", "jr", "jb",
+    "jump", "jal", "jr",
     "ssc", "syscall", "showmem"
 ]
 
@@ -88,9 +87,8 @@ proc checkSintaxe(instrucao: string, args: seq[string]): string =
       of "syscall"      : return sintaxeSyscall(args)
       of "jumppoint"    : return sintaxeJumpPoint(args)
       of "jump"         : return sintaxeJump(args)
-    #   of "jal"
-    #   of "jb"
-    #   of "jr"
+      of "jal"          : return sintaxeJal(args)
+      of "jr"           : return sintaxeJr(args)
       else : return "O dev esqueceu de implementar isso pelo visto"
 
 # Detecta erros de sintaxe
@@ -113,10 +111,7 @@ proc getJumpPoints(script: seq[string]): (string, TableRef[string, int]) =
                 let msg = "Multiplos pontos com o nome " & v[1..^1] & "\n - linha " & $points[v] & "\n - linha " & $i
                 return (msg, points)
             points[v[1..^1]] = i
-
-    
     return ("ok", points)    
-
 
 proc getComandoRepl*(entrada: string): Instrucao =
     var operacao = tokenizer(entrada)

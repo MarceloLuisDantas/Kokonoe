@@ -8,14 +8,15 @@ type Instrucao* = tuple
 func newInstrucao*(ins: string, args: seq[string]): Instrucao =
     return (ins, args)
 
+# | Registrador | Nome        | Editavel | Descrição  
+# | :---------- | :---------- | :------- | :-------- 
+# | #r0         | $ZERO       | NÂO      | ZERO
+# | #r1 .. r4   | $a1 .. $a4  | SIM      | Argumentos para procedimentos 
+# | #r5, r6     | $v1, $v2    | SIM      | Retornos de procedimentos
+# | #r7 .. r16  | $t1 .. $t10 | SIM      | Valores temporarios
+# | #30         | $ra         | NÂO      | Valor de retorno apos termino de procedimento
+# | #r31        | $sv         | SIM      | Seta qual syscalls
 type Processador* = ref object
-    # | Registrador | Nome        | Editavel | Descrição  
-    # | :---------- | :---------- | :------- | :-------- 
-    # | #r0         | $ZERO       | NÂO      | ZERO
-    # | #r1 .. r4   | $a1 .. $a4  | SIM      | Argumentos para procedimentos 
-    # | #r5, r6     | $v1, $v2    | SIM      | Retornos de procedimentos
-    # | #r7 .. r16  | $t1 .. $t10 | SIM      | Valores temporarios
-    # | #r31        | $sv         | SIM      | Seta qual syscalls
     registradores: array[32, int]
     programStack: seq[Instrucao]
     programCounter: int
@@ -44,6 +45,7 @@ func regToIndex(registrador: string) : int =
       of "#r14", "$t8"   : return 14
       of "#r15", "$t9"   : return 15
       of "#r16", "$t10"  : return 16
+      of "#r30", "$ra"   : return 30
       of "#r31", "$sv"   : return 31
       else : return -1
 
@@ -62,9 +64,6 @@ proc setR(self: Processador, r: int, v: int) =
     if (r != 0) :
         self.registradores[r] = v
 
-proc setPc(self: Processador, v: int) =
-    self.programCounter = v
-
 proc getNextInstruction(self: Processador): Instrucao =
     return self.programStack[self.programCounter]
 
@@ -81,7 +80,7 @@ proc getNextInstruction(self: Processador): Instrucao =
 # | jump      | valor
 # | jal       | valor
 # | jr        | registrador
-# | jb        
+# | jr
 # |
 # | ssc       | valor       |
 # | syscall   
@@ -111,6 +110,13 @@ proc subi(self: Processador, r1: string, r2: string, v: string) =
 
 proc jump(self: Processador, point: string) =
     self.programCounter = self.jumpPoints[point]
+
+proc jal(self: Processador, point: string) =
+    self.setR(regToIndex("$ra"), self.programCounter)
+    self.programCounter = self.jumpPoints[point]
+
+proc jr(self: Processador) =
+    self.programCOunter = self.getR(regToIndex("$ra"))
 
 # Seta qual syscall sera chamada
 proc ssc(self: Processador, v: int) =
@@ -153,6 +159,8 @@ proc exec*(self: Processador, instrucao: Instrucao) =
       of "li"      : self.addi(args[0], "$ZERO", args[1])
       of "move"    : self.add(args[0], "$ZERO", args[1])
       of "jump"    : self.jump(args[0])
+      of "jal"     : self.jal(args[0])
+      of "jr"      : self.jr()
       of "ssc"     : self.ssc(args[0].parseInt())
       of "syscall" : self.callSyscall()
       of "showmem" : self.showMem()
@@ -165,8 +173,7 @@ proc cleanProgramStack(self: Processador) =
     self.programStack = newSeq[Instrucao]()
 
 proc execProgram*(self: Processador) =
-
-    while self.programCounter <= self.programStack.len() :        
+    while self.programCounter < self.programStack.len() :        
         self.execNextInstruction()
     self.cleanProgramStack()
 

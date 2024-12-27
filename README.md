@@ -40,14 +40,17 @@ Registradores reservados para uso temporario, as variaveis do seu programa.
 Registrador reservado para uso interno
 
 ## Instruções
-| Instrução | argumento 1 | argumento 2 | argumento 3 |
-| :-------- | :---------- | :---------- | :---------- |
-| add       | registrador | registrador | registrador |
-| addi      | registrador | registrador | valor       |
-| sub       | registrador | registrador | registrador |
-| subi      | registrador | registrador | valor       |
-| move      | registrador | registrador
-| li        | registrador | valor
+| Instrução | argumento 1    | argumento 2 | argumento 3 |
+| :-------- | :------------: | :---------: | :---------: |
+| add       | registrador    | registrador | registrador |
+| addi      | registrador    | registrador | valor       |
+| sub       | registrador    | registrador | registrador |
+| subi      | registrador    | registrador | valor       |
+| move      | registrador    | registrador
+| li        | registrador    | valor
+| jump      | ponto de jump
+| jal       | ponto de jump
+| jr        |
 | ssc       | valor       
 | syscall   
 
