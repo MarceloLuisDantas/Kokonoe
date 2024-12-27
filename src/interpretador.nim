@@ -1,3 +1,4 @@
+# Instruções do processador
 # | Instrução | argumento 1 | argumento 2 | argumento 3 |
 # | :-------- | :---------- | :---------- | :---------- |
 # | add       | registrador | registrador | registrador |
@@ -5,9 +6,15 @@
 # | sub       | registrador | registrador | registrador |
 # | subi      | registrador | registrador | valor       |
 # | move      | registrador | registrador
-# | li        | registrador | valor
-# | ssc       | valor       
-# | syscall  
+# |
+# | jump      | valor
+# | jal       | valor
+# | jr        | registrador
+# | jb        
+# |
+# | ssc       | valor       |
+# | syscall   
+# | showmem 
 #
 # add  $t1 $t2 $t3 - t1 = t2 + t3
 # addi $t1 $t2 100 - t1 = t2 + 100
@@ -21,7 +28,9 @@ import sequtils
 import tables
 
 let instructions = @[
-    "add", "addi", "sub", "subi", "move", "li", "ssc", "syscall", "showmem"
+    "add", "addi", "sub", "subi", "move", "li", 
+    "jump", "jal", "jr", "jb",
+    "ssc", "syscall", "showmem"
 ]
 
 let comandos = @[
@@ -37,11 +46,16 @@ func linhaVazia(linha: string): bool =
 func filtraEspaço(entrada: string): bool =
     return entrada != ""
 
+proc isJumpPoint(linha: string): bool =
+    return linha[0] == '_'
+
 func tokenizer(entrada: string): Instrucao =
     let tokens = entrada.split(" ")
-    if tokens.len() == 1 :
-        return newInstrucao(tokens[0], @[])
-    return newInstrucao(tokens[0], tokens[1..^1])
+    if tokens.len() != 1 :
+        return newInstrucao(tokens[0], tokens[1..^1])
+    if isJumpPoint(tokens[0]) : 
+        return newInstrucao("jumppoint", @[tokens[0][1..^1]])
+    return newInstrucao(tokens[0], @[])
 
 # Faz a limpeza do script, revomendo espaços extras e comentarios
 proc limpaScript(script: seq[string]): seq[string] =
@@ -59,17 +73,24 @@ proc limpaScript(script: seq[string]): seq[string] =
 # Usada apenas ao executar scripts
 proc detectaInstrucaoNaoExistente(script: seq[string]): seq[string] =
     for i, v in script :
-        let instrucao = v.split(" ")[0]
-        if instructions.find(instrucao) == -1 :
-            result.add("Erro na linha " & $(i+1) & " instrução \"" & instrucao & "\" não reconhecido")       
+        if not isJumpPoint(v) :
+            let instrucao = v.split(" ")[0]
+            if instructions.find(instrucao) == -1 :
+                result.add("Erro na linha " & $(i+1) & " instrução \"" & instrucao & "\" não reconhecido")       
 
 proc checkSintaxe(instrucao: string, args: seq[string]): string =
     case instrucao :
-      of "add", "sub" : return sintaxeAddSub(args)
-      of "move"       : return sintaxeMove(args)
-      of "li"         : return sintaxeLi(args)
-      of "ssc"        : return sintaxeSsc(args)
-      of "syscall"    : return sintaxeSyscall(args)
+      of "add", "sub"   : return sintaxeAddSub(args)
+      of "addi", "subi" : return sintaxeAddiSubi(args)
+      of "move"         : return sintaxeMove(args)
+      of "li"           : return sintaxeLi(args)
+      of "ssc"          : return sintaxeSsc(args)
+      of "syscall"      : return sintaxeSyscall(args)
+      of "jumppoint"    : return sintaxeJumpPoint(args)
+      of "jump"         : return sintaxeJump(args)
+    #   of "jal"
+    #   of "jb"
+    #   of "jr"
       else : return "O dev esqueceu de implementar isso pelo visto"
 
 # Detecta erros de sintaxe
@@ -91,7 +112,9 @@ proc getJumpPoints(script: seq[string]): (string, TableRef[string, int]) =
             if points.hasKey(v) :
                 let msg = "Multiplos pontos com o nome " & v[1..^1] & "\n - linha " & $points[v] & "\n - linha " & $i
                 return (msg, points)
-            points[v] = i
+            points[v[1..^1]] = i
+
+    
     return ("ok", points)    
 
 
@@ -108,34 +131,30 @@ proc execScript*(proce: Processador, file: string) =
     # Remove qualquer espaço em branco extra e os comentarios
     let scriptLimpo = limpaScript(linhas)
 
-    # # Verifica se existe alguma instrução invalida
-    # let erros = detectaInstrucaoNaoExistente(scriptLimpo)
-    # if erros.len() > 0 :
-    #     for erro in erros :
-    #         echo erro
-    #     return
+    # Verifica se existe alguma instrução invalida
+    let erros = detectaInstrucaoNaoExistente(scriptLimpo)
+    if erros.len() > 0 :
+        for erro in erros :
+            echo erro
+        return
 
-    # # Verifica os erros de sintaxe de cada instrução
-    # let errosSintaxe = detecaErrosSintaxe(scriptLimpo)  
-    # if errosSintaxe.len() != 0 :
-    #     for i in errosSintaxe :
-    #         echo i
-    #     return
+    # Verifica os erros de sintaxe de cada instrução
+    let errosSintaxe = detecaErrosSintaxe(scriptLimpo)  
+    if errosSintaxe.len() != 0 :
+        for i in errosSintaxe :
+            echo i
+        return
 
     let (err, jumpPoints) = getJumpPoints(scriptLimpo)
     if err != "ok" :
         echo err
         return
 
-    for i in jumpPoints.keys() :
-        echo jumpPoints[i]
-
-    # for i in jumpPoints :
-    #     echo i
+    proce.jumpPoints = jumpPoints
 
     # Carrega o script na memoria
-    # for linha in scriptLimpo :
-    #     let instrucao = tokenizer(linha)
-        # proce.addInstruction(instrucao)
+    for linha in scriptLimpo :
+        let instrucao = tokenizer(linha)
+        proce.addInstruction(instrucao)
 
     proce.execProgram()

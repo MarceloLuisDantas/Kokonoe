@@ -1,4 +1,5 @@
 from strutils import parseInt
+import tables
 
 type Instrucao* = tuple
     op: string
@@ -18,9 +19,10 @@ type Processador* = ref object
     registradores: array[32, int]
     programStack: seq[Instrucao]
     programCounter: int
+    jumpPoints*: TableRef[string, int]
 
 func newProcessador*(): Processador =
-    Processador()
+    Processador(programCounter: 0)
 
 # Converte o nome do registrador para o indice no array
 func regToIndex(registrador: string) : int =
@@ -107,6 +109,9 @@ proc subi(self: Processador, r1: string, r2: string, v: string) =
     var i2: int = regToIndex(r2)
     self.setR(i1, self.getR(i2) - v.parseInt())    
 
+proc jump(self: Processador, point: string) =
+    self.programCounter = self.jumpPoints[point]
+
 # Seta qual syscall sera chamada
 proc ssc(self: Processador, v: int) =
     self.setR(regToIndex("$sv"), v)
@@ -138,7 +143,7 @@ proc callSyscall(self: Processador) =
       else : return
 
 # Recebe um comando e seus argumentos e executa
-proc exce*(self: Processador, instrucao: Instrucao) =
+proc exec*(self: Processador, instrucao: Instrucao) =
     let args = instrucao.args
     case instrucao.op
       of "add"     : self.add(args[0], args[1], args[2]) 
@@ -147,20 +152,22 @@ proc exce*(self: Processador, instrucao: Instrucao) =
       of "subi"    : self.subi(args[0], args[1], args[2])
       of "li"      : self.addi(args[0], "$ZERO", args[1])
       of "move"    : self.add(args[0], "$ZERO", args[1])
+      of "jump"    : self.jump(args[0])
       of "ssc"     : self.ssc(args[0].parseInt())
       of "syscall" : self.callSyscall()
       of "showmem" : self.showMem()
 
-proc exec(self: Processador) =
+proc execNextInstruction(self: Processador) =
     self.exec(self.programStack[self.programCounter])
+    self.programCounter += 1
 
 proc cleanProgramStack(self: Processador) =
     self.programStack = newSeq[Instrucao]()
 
 proc execProgram*(self: Processador) =
-    while self.programCounter != self.programStack.len() :
-        self.exce()
-        self.programCounter += 1
+
+    while self.programCounter <= self.programStack.len() :        
+        self.execNextInstruction()
     self.cleanProgramStack()
 
 # Descrição do Processador

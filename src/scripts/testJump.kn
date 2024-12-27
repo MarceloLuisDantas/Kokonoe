@@ -1,18 +1,10 @@
 
-    ; Esse script devera imprimir na tela infinitamente somas de 1
-
-; soma os 2 valores salvos em $a1 e $a2 em $v1
-_soma
-    add $v1 $a1 $a2
-    jb
-
-; printa na tela o valor salvo e $a1
-_print
+    li $t1 1
     ssc 1
-    syscall
-    jb
 
-; funcao main
-_main
-    li
+_soma
+    addi $a1 $a1 1
+    syscall
+    jump soma
+
 

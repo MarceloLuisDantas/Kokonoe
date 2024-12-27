@@ -37,7 +37,7 @@ proc repl() =
           of "vi"   : vi(args[0])
           of "run"  : run(args[0])
           else :
-            proce.exce(instrucao)
+            proce.exec(instrucao)
 
 proc main() =
     let parametros = commandLineParams()
