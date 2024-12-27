@@ -17,6 +17,7 @@ type Processador* = ref object
     # | #r31        | $sv         | SIM      | Seta qual syscalls
     registradores: array[32, int]
     programStack: seq[Instrucao]
+    programCounter: int
 
 func newProcessador*(): Processador =
     Processador()
@@ -59,8 +60,11 @@ proc setR(self: Processador, r: int, v: int) =
     if (r != 0) :
         self.registradores[r] = v
 
+proc setPc(self: Processador, v: int) =
+    self.programCounter = v
 
-
+proc getNextInstruction(self: Processador): Instrucao =
+    return self.programStack[self.programCounter]
 
 
 # Instruções do processador
@@ -71,6 +75,11 @@ proc setR(self: Processador, r: int, v: int) =
 # | sub       | registrador | registrador | registrador |
 # | subi      | registrador | registrador | valor       |
 # | move      | registrador | registrador
+# |
+# | jump      | valor
+# | jal       | valor
+# | jr        | registrador
+# | jb        
 # |
 # | ssc       | valor       |
 # | syscall   
@@ -142,12 +151,16 @@ proc exce*(self: Processador, instrucao: Instrucao) =
       of "syscall" : self.callSyscall()
       of "showmem" : self.showMem()
 
+proc exec(self: Processador) =
+    self.exec(self.programStack[self.programCounter])
+
 proc cleanProgramStack(self: Processador) =
     self.programStack = newSeq[Instrucao]()
 
 proc execProgram*(self: Processador) =
-    for ins in self.programStack :
-        self.exce(ins)
+    while self.programCounter != self.programStack.len() :
+        self.exce()
+        self.programCounter += 1
     self.cleanProgramStack()
 
 # Descrição do Processador

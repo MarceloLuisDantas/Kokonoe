@@ -18,6 +18,7 @@ import processador
 import sintaxes
 import strutils
 import sequtils
+import tables
 
 let instructions = @[
     "add", "addi", "sub", "subi", "move", "li", "ssc", "syscall", "showmem"
@@ -82,6 +83,18 @@ proc detecaErrosSintaxe(script: seq[string]): seq[string] =
                 "    - " & err & "\n"
             )
 
+# Encontra e gera a tabela de pontos para os jumps
+proc getJumpPoints(script: seq[string]): (string, TableRef[string, int]) =
+    var points = newTable[string, int]()
+    for i, v in script :
+        if v[0] == '_' :
+            if points.hasKey(v) :
+                let msg = "Multiplos pontos com o nome " & v[1..^1] & "\n - linha " & $points[v] & "\n - linha " & $i
+                return (msg, points)
+            points[v] = i
+    return ("ok", points)    
+
+
 proc getComandoRepl*(entrada: string): Instrucao =
     var operacao = tokenizer(entrada)
     if concat(instructions, comandos).find(operacao.op) != -1 :
@@ -95,26 +108,34 @@ proc execScript*(proce: Processador, file: string) =
     # Remove qualquer espaço em branco extra e os comentarios
     let scriptLimpo = limpaScript(linhas)
 
-    # Verifica se existe alguma instrução invalida
-    let erros = detectaInstrucaoNaoExistente(scriptLimpo)
-    if erros.len() > 0 :
-        for erro in erros :
-            echo erro
+    # # Verifica se existe alguma instrução invalida
+    # let erros = detectaInstrucaoNaoExistente(scriptLimpo)
+    # if erros.len() > 0 :
+    #     for erro in erros :
+    #         echo erro
+    #     return
+
+    # # Verifica os erros de sintaxe de cada instrução
+    # let errosSintaxe = detecaErrosSintaxe(scriptLimpo)  
+    # if errosSintaxe.len() != 0 :
+    #     for i in errosSintaxe :
+    #         echo i
+    #     return
+
+    let (err, jumpPoints) = getJumpPoints(scriptLimpo)
+    if err != "ok" :
+        echo err
         return
 
-    # Verifica os erros de sintaxe de cada instrução
-    let errosSintaxe = detecaErrosSintaxe(scriptLimpo)  
-    if errosSintaxe.len() != 0 :
-        for i in errosSintaxe :
-            echo i
-        return
+    for i in jumpPoints.keys() :
+        echo jumpPoints[i]
+
+    # for i in jumpPoints :
+    #     echo i
 
     # Carrega o script na memoria
-    for linha in scriptLimpo :
-        let instrucao = tokenizer(linha)
-        proce.addInstruction(instrucao)
+    # for linha in scriptLimpo :
+    #     let instrucao = tokenizer(linha)
+        # proce.addInstruction(instrucao)
 
     proce.execProgram()
-    
-    
-
