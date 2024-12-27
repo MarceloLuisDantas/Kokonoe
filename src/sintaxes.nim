@@ -44,11 +44,12 @@ proc sintaxeSsc*(args: seq[string]): string =
         return "Ssc recebe exatamente 1 argumento"
 
     try :
-        discard parseInt(args[1])
+        discard parseInt(args[0])
         return "ok"
     except :
-        return "Valor passado invalido"
+        return args[0] & " não é um valor passado invalido"
 
 proc sintaxeSyscall*(args: seq[string]): string =
     if args.len() != 0 :
         return "Syscall não recebe nem um parametro"
+    return "ok"
