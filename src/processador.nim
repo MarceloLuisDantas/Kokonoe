@@ -1,5 +1,12 @@
 from strutils import parseInt
 
+type Instrucao* = tuple
+    op: string
+    args: seq[string]
+
+func newInstrucao*(ins: string, args: seq[string]): Instrucao =
+    return (ins, args)
+
 type Processador* = ref object
     # | Registrador | Nome        | Editavel | Descrição  
     # | :---------- | :---------- | :------- | :-------- 
@@ -9,16 +16,10 @@ type Processador* = ref object
     # | #r7 .. r16  | $t1 .. $t10 | SIM      | Valores temporarios
     # | #r31        | $sv         | SIM      | Seta qual syscalls
     registradores: array[32, int]
+    programStack: seq[Instrucao]
 
 func newProcessador*(): Processador =
     Processador()
-
-type Instrucao* = tuple
-    op: string
-    args: seq[string]
-
-func newInstrucao*(ins: string, args: seq[string]): Instrucao =
-    return (ins, args)
 
 # Converte o nome do registrador para o indice no array
 func regToIndex(registrador: string) : int =
@@ -46,7 +47,9 @@ func regToIndex(registrador: string) : int =
 func registradorValido*(registrador: string): bool =
     return regToIndex(registrador) != -1
 
-# Get Set Registradores
+proc addInstruction*(self: Processador, ins: Instrucao) =
+    self.programStack.add(ins)
+
 func getR(self: Processador, r: int): int = 
     if r == 0 :
         return 0
@@ -55,6 +58,10 @@ func getR(self: Processador, r: int): int =
 proc setR(self: Processador, r: int, v: int) =
     if (r != 0) :
         self.registradores[r] = v
+
+
+
+
 
 # Instruções do processador
 # | Instrução | argumento 1 | argumento 2 | argumento 3 |
@@ -69,7 +76,6 @@ proc setR(self: Processador, r: int, v: int) =
 # | syscall   
 # | showmem 
 
-# Instruções
 proc add(self: Processador, r1: string, r2: string, r3: string) =
     var i1: int = regToIndex(r1)
     var i2: int = regToIndex(r2)
@@ -136,8 +142,16 @@ proc exce*(self: Processador, instrucao: Instrucao) =
       of "syscall" : self.callSyscall()
       of "showmem" : self.showMem()
 
+proc cleanProgramStack(self: Processador) =
+    self.programStack = newSeq[Instrucao]()
+
+proc execProgram*(self: Processador) =
+    for ins in self.programStack :
+        self.exce(ins)
+    self.cleanProgramStack()
+
 # Descrição do Processador
-proc about*(self: Processador) =
+proc about*(self: Processador) =    
     let Kokonoe = """              
  _   _______ _   _______ _   _ _____ _____ 
 | | / /  _  | | / /  _  | \ | |  _  |  ___|

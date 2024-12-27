@@ -109,10 +109,12 @@ proc execScript*(proce: Processador, file: string) =
             echo i
         return
 
-    # Executa o script
+    # Carrega o script na memoria
     for linha in scriptLimpo :
         let instrucao = tokenizer(linha)
-        proce.exce(instrucao)
+        proce.addInstruction(instrucao)
+
+    proce.execProgram()
     
     
 
