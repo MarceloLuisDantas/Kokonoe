@@ -19,11 +19,12 @@ Kokonoe suporta alguns comandos comuns de shell, dentre eles;
 | :---------- | :---------- | :------- | :-------- 
 | #r0         | $ZERO       | NÂO      | ZERO
 | #r1 .. r4   | $a1 .. $a4  | SIM      | Argumentos para procedimentos 
-| #r5, r6     | $v1, $v2    | SIM      | Retornos de procedimentos
+| #r5 e r6    | $v1 e $v2   | SIM      | Retornos de procedimentos
 | #r7 .. r17  | $t1 .. $t10 | SIM      | Valores temporarios
 | #r18 .. r30 |             | SIM      | em trabalho, podem ser utilizados por hora
 | #r30        | $ra         | NÂO      | Reservado para armazenar o ponto de retorno
 | #r31        | $sv         | SIM      | Reservado para setar chamada de syscall
+PS: Todos os registradores são editaveis (exceto o ZERO que é hardcoded), mas não é recomendado utilizar os marcados como não editaveis
 
 ### #r0 ou $ZERO
 Valor ZERO constante, qualquer valor adicionado a ele sera ignorando, e sempre que for chamado sera recebido 0. Pode ser utilizado quando o resultado de uma operação não é necessario, porem ela necessita um lugar para salvar o resultado, jogando o resultado para ZERO a operação sera possivel 
