@@ -22,6 +22,7 @@ Kokonoe suporta alguns comandos comuns de shell, dentre eles;
 | #r5, r6     | $v1, $v2    | SIM      | Retornos de procedimentos
 | #r7 .. r17  | $t1 .. $t10 | SIM      | Valores temporarios
 | #r18 .. r30 |             | SIM      | em trabalho, podem ser utilizados por hora
+| #r30        | $ra         | NÂO      | Reservado para armazenar o ponto de retorno
 | #r31        | $sv         | SIM      | Reservado para setar chamada de syscall
 
 ### #r0 ou $ZERO
@@ -35,6 +36,9 @@ Registradores reservados para serem utilizados para armazenar os retornos de um 
 
 ### #r7..#r17 ou $t1..t10 (Temporario)
 Registradores reservados para uso temporario, as variaveis do seu programa.
+
+### #30 ou $ra (Returna Adress)
+Registrador que armazena o ponto de pulo ao utilizar jal, utilizado pelo jr para saber para qual ponto retornar apos o fim de um procedimento
 
 ### #r31 ou $sv (Syscall Value)
 Registrador reservado para uso interno
@@ -60,6 +64,9 @@ Registrador reservado para uso interno
 - `subi #reg1 #reg2 valor` - Aloca em reg1 a subtração do valore em reg 2 com o valor passado
 - `move #reg1 #reg2` - Move o valor de reg2 para reg1, é apenas um aptalho para `add #reg1 $ZERO #reg2`
 - `li #reg1 valor` - Aloca em reg1 o valor passado, é apenas um atalho para `addi #reg1 $ZERO valor`
+- `jump ponto_de_jump` - Move a execução do codigo para outra linha (um goto)
+- `jal ponto_de_jump` - Move a execução do codigo para outra linha, e salva a linha original no registrador $ra
+- `jr` - Retorna para o ponto armazenado em $ra
 - `ssc valor` - seta o registrador responsavel por chamar syscalls
 - `syscall` - Realiza a chamada de uma Syscall utilizando
 
@@ -69,8 +76,7 @@ Imprime na tela o valor armazenado no registrador $a1
 
 
 # TO DO
-Converter a exceução de scripts e de um for indo linha por linha, para cada comando ser um objeto dentro de uma linha de comandos
-
-Implementar a capacidade de voltar para um ponto especifico do script (goto), isso permitira a implementação de procedimentos e condicionais
-
+Implementação de condicionais
 Implementação de uma memoria fora os registradores
+Implementação de mais syscalls
+Implementação de uso de strings
