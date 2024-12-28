@@ -46,7 +46,20 @@ func regToIndex(registrador: string) : int =
       of "#r13", "$t7"   : return 13
       of "#r14", "$t8"   : return 14
       of "#r15", "$t9"   : return 15
-      of "#r16", "$t10"  : return 16
+      of "#r16", "$t10"  : return 16      
+      of "#r17"          : return 17
+      of "#r18"          : return 18
+      of "#r19"          : return 19
+      of "#r20"          : return 20
+      of "#r21"          : return 21
+      of "#r22"          : return 22
+      of "#r23"          : return 23
+      of "#r24"          : return 24
+      of "#r25"          : return 25
+      of "#r26"          : return 26
+      of "#r27"          : return 27
+      of "#r28"          : return 28
+      of "#r29", "$at"   : return 29
       of "#r30", "$ra"   : return 30
       of "#r31", "$sv"   : return 31
       else : return -1
@@ -124,18 +137,6 @@ proc jr(self: Processador) =
     self.programCounter = self.getR(regToIndex("$ra"))
     self.setR(regToIndex("$ra"), self.recursionStack.pop)
 
-proc beq(self: Processador, regis1: string, regis2: string, pulo: string) =
-    let valor1 = self.getR(regToIndex(regis1))
-    let valor2 = self.getR(regToIndex(regis2))
-    if valor1 == valor2 :
-        self.programCounter = self.jumpPoints[pulo]
-
-proc bne(self: Processador, regis1: string, regis2: string, pulo: string) =
-    let valor1 = self.getR(regToIndex(regis1))
-    let valor2 = self.getR(regToIndex(regis2))
-    if valor1 != valor2 :
-        self.programCounter = self.jumpPoints[pulo]
-
 proc slt(self: Processador, r1: string, r2: string, r3: string) =
     let valor1 = self.getR(regToIndex(r2))
     let valor2 = self.getR(regToIndex(r3))
@@ -151,6 +152,33 @@ proc slti(self: Processador, r1: string, r2: string, comp: int) =
     else :
         self.setR(regToIndex(r1), 0)
 
+proc beq(self: Processador, regis1: string, regis2: string, pulo: string) =
+    let valor1 = self.getR(regToIndex(regis1))
+    let valor2 = self.getR(regToIndex(regis2))
+    if valor1 == valor2 :
+        self.programCounter = self.jumpPoints[pulo]
+
+proc bne(self: Processador, regis1: string, regis2: string, pulo: string) =
+    let valor1 = self.getR(regToIndex(regis1))
+    let valor2 = self.getR(regToIndex(regis2))
+    if valor1 != valor2 :
+        self.programCounter = self.jumpPoints[pulo]
+
+proc blt(self: Processador, r1: string, r2: string, pulo: string) =
+    self.slt("$at", r1, r2)
+    self.bne("$at", "$ZERO", pulo)
+    
+proc ble(self: Processador, r1: string, r2: string, pulo: string) =
+    self.slt("$at", r2, r1)
+    self.beq("$at", "$ZERO", pulo)
+
+proc bgt(self: Processador, r1: string, r2: string, pulo: string) =
+    self.slt("$at", r2, r1)
+    self.bne("$at", "$ZERO", pulo)
+
+proc bge(self: Processador, r1: string, r2: string, pulo: string) =
+    self.slt("$at", r1, r2)
+    self.beq("$at", "$ZERO", pulo)
 
 # Seta qual syscall sera chamada
 proc ssc(self: Processador, v: int) =
@@ -170,7 +198,9 @@ proc showMem(self: Processador) =
         ("r1", "a1"), ("r2", "a2"), ("r3", "a3"), ("r4", "a4"), 
         ("r5", "v1"), ("r6", "v2"), 
         ("r7", "t1"), ("r8", "t2"), ("r9", "t3"), ("r10", "t4"), ("r11", "t5"), ("r12", "t6"), ("r13", "t7"), ("r14", "t8"), ("r15", "t9"), ("r16", "t10"), 
-        ("r17", ""),  ("r18", ""),  ("r19", ""),  ("r20", ""),  ("r21", ""),  ("r22", ""),  ("r23", ""),  ("r24", ""),  ("r25", ""),  ("r26", ""),  ("r27", ""),  ("r28", ""),  ("r29", ""),  ("r30", ""),  
+        ("r17", ""),  ("r18", ""),  ("r19", ""),  ("r20", ""),  ("r21", ""),  ("r22", ""),  ("r23", ""),  ("r24", ""),  ("r25", ""),  ("r26", ""),  ("r27", ""),  ("r28", ""),  
+        ("r29", "at"),  
+        ("r30", "ra"),  
         ("r31", "sv")  
     ]
     
@@ -199,6 +229,10 @@ proc exec*(self: Processador, instrucao: Instrucao) =
       of "move"    : self.add(args[0], "$ZERO", args[1])
       of "beq"     : self.beq(args[0], args[1], args[2])
       of "bne"     : self.bne(args[0], args[1], args[2])
+      of "blt"     : self.blt(args[0], args[1], args[2])
+      of "ble"     : self.ble(args[0], args[1], args[2])
+      of "bgt"     : self.bgt(args[0], args[1], args[2])
+      of "bge"     : self.bge(args[0], args[1], args[2])
       of "slt"     : self.slt(args[0], args[1], args[2])
       of "slti"    : self.slti(args[0], args[1], args[2].parseInt())
       of "jump"    : self.jump(args[0])

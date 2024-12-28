@@ -62,34 +62,38 @@ proc sintaxeSyscall*(args: seq[string]): string =
         return "Syscall não recebe nem um parametro"
     return "ok"
 
-proc apenasLetras(linha: string): bool =
-    let letras = @[
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 
-        'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 
-        'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-    ]
-
-    for i in toUpperAscii(linha) :
-        if letras.find(i) == -1 :
-            return false
-    return true
+proc jumpNameValido(nome: string): string =
+    let simbulosValidos = "qwertyuiopasdfghjklzxcvbnm123456789_"
+    for i in toLowerAscii(nome) :
+        if simbulosValidos.find(i) == -1 :
+            return $i & " não é um caracter valido"
+    return "ok"
 
 proc sintaxeJumpPoint*(linha: seq[string]): string =  
     let nome = linha[0]
     if nome.len() < 1 :
         return "Jump Points precisam de um nome"
 
-    if not apenasLetras(nome) :
-        return "Jump Points podem possuir apenas letras"
+    let err = jumpNameValido(nome)
+    if err != "" :
+        return err
 
     return "ok"
+
+proc apenasLetras(x: string): bool =
+    let letras = "qwertyuiopasdfghjklzxcvbnm"
+    for i in x :
+        if letras.find(i) == -1 :
+            return false
+    return true
 
 proc sintaxeJump*(linha: seq[string]): string =
     if linha.len() != 1 :
         return "jump so recebe 1 parametro, o ponto de jump"
     
-    if not apenasLetras(linha[0]) :
-        return "pontos de jump so podem possuir letras"
+    let err = jumpNameValido(linha[0])
+    if err != "" :
+        return err
 
     return "ok"
 
@@ -97,8 +101,9 @@ proc sintaxeJal*(linha: seq[string]): string =
     if linha.len() != 1 :
         return "jal so recebe 1 parametro, o ponto de jump"
     
-    if not apenasLetras(linha[0]) :
-        return "pontos de jump so podem possuir letras"
+    let err = jumpNameValido(linha[0])
+    if err != "" :
+        return err
 
     return "ok"
 
@@ -113,8 +118,9 @@ proc sintaxeBranch*(args: seq[string]): string =
         return "Branchs recebem 3 parametros, 2 registradores e 1 inteiro"
     if not registradoresValidos(args[0..1]) :
         return "1 ou mais registradores invalidos"
-    if not apenasLetras(args[2]) :
-        return "Pontos de pulo podem possuir apenas letras"
+    let err = jumpNameValido(args[2])
+    if err != "" :
+        return err
     return "ok"
 
 proc sintaxeSlt*(args: seq[string]): string =

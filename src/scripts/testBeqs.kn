@@ -1,0 +1,250 @@
+jump main
+
+_cleanRegs
+    li $t1 0
+    li $t2 0
+    li $t3 0
+    li $a1 0
+    jr
+
+_print
+    ssc 1
+    syscall
+    jr
+
+; Teste branch if equals | if t1 == t2 goto 
+_testBeq
+    ; Teste numero 1 para verdadeiro
+        li $t1 100              ; t1 = 100
+        li $t2 100              ; t2 = 100
+        beq $t1 $t2 beqIgual    ; if t1 == t2 :
+            li $a1 0            ;   a1 = 1
+            jump beqEnd         
+    _beqIgual                   ; else :
+            li $a1 1            ;   a1 = 0
+    _beqEnd
+        jal print               ; print a1
+        jal cleanRegs           ; limpando t1, t2, t3 e a1
+        
+    ; Teste numero 2 para falso
+        li $t1 100              ; t1 = 100
+        li $t2 200              ; t2 = 200
+        beq $t1 $t2 beqIgual2   ; if t1 == t2 :
+            li $a1 1            ;   a1 = 0
+            jump beqEnd2         
+    _beqIgual2                  ; else :
+            li $a1 0            ;   a1 = 1
+    _beqEnd2
+        jal print               ; print a1
+
+        jr                      
+
+; Teste branch if no equals | if t1 != t2 goto 
+_testBne 
+    ; Teste numero 1 para verdadeiro
+        li $t1 100              ; t1 = 100
+        li $t2 200              ; t2 = 200
+        bne $t1 $t2 bneDife     ; if t1 != t2 :
+            li $a1 0            ;   a1 = 1
+            jump bneEnd         
+    _bneDife                    ; else :
+            li $a1 1            ;   a1 = 0
+    _bneEnd
+        jal print               ; print a1
+        jal cleanRegs           ; limpando t1, t2, t3 e a1
+        
+    ; Teste numero 2 para falso
+        li $t1 100              ; t1 = 100
+        li $t2 100              ; t2 = 100
+        bne $t1 $t2 bneDife2    ; if t1 != t2 :
+            li $a1 1            ;   a1 = 0
+            jump bneEnd2         
+    _bneDife2                   ; else :
+            li $a1 0            ;   a1 = 1
+    _bneEnd2
+        jal print               ; print a1
+
+    jr
+
+; Teste branch if greater than | if t1 > t2 goto 
+_testBgt
+    ; Teste 1 para maior            
+        li $t1 100
+        li $t2 60
+        bgt $t1 $t2 bgtMaior  
+            li $a1 0
+            jump bgtEnd
+    _bgtMaior
+            li $a1 1
+    _bgtEnd
+        jal print
+
+    ; Teste 2 para igual
+        li $t1 100
+        li $t2 100
+        bgt $t1 $t2 bgtMaior2
+            li $a1 1
+            jump bgtEnd2
+    _bgtMaior2
+            li $a1 0
+    _bgtEnd2
+        jal print
+
+    ; Teste 3 para menor
+        li $t1 100
+        li $t2 150
+        bgt $t1 $t2 bgtMaior3
+            li $a1 1
+            jump bgtEnd3
+    _bgtMaior3
+            li $a1 0
+    _bgtEnd3
+        jal print
+
+    jr
+
+; Teste branch if greater or equals than | if t1 >= t2 goto 
+_testBge
+    ; Teste 1 para maior            
+        li $t1 100
+        li $t2 60
+        bge $t1 $t2 bgeMaiorIgual  
+            li $a1 0
+            jump bgeEnd
+    _bgeMaiorIgual
+            li $a1 1
+    _bgeEnd
+        jal print
+
+    ; Teste 2 para igual
+        li $t1 100
+        li $t2 100
+        bge $t1 $t2 bgeMaiorIgual2
+            li $a1 0
+            jump bgeEnd2
+    _bgeMaiorIgual2
+            li $a1 1
+    _bgeEnd2
+        jal print
+
+    ; Teste 3 para menor 
+        li $t1 100
+        li $t2 150
+        bge $t1 $t2 bgeMaiorIgual3
+            li $a1 1
+            jump bgeEnd3
+    _bgeMaiorIgual3
+            li $a1 0
+    _bgeEnd3
+        jal print
+
+    jr
+
+; Teste branch if less than | if t1 < t2 goto 
+_testBlt
+    ; Teste 1 para maior            
+        li $t1 100
+        li $t2 60
+        blt $t1 $t2 bltMenor
+            li $a1 1
+            jump bltEnd
+    _bltMenor
+            li $a1 0
+    _bltEnd
+        jal print
+
+    ; Teste 2 para igual
+        li $t1 100
+        li $t2 100
+        blt $t1 $t2 bltMenor2
+            li $a1 1
+            jump bltEnd2
+    _bltMenor2
+            li $a1 0
+    _bltEnd2
+        jal print
+
+    ; Teste 3 para menor 
+        li $t1 100
+        li $t2 150
+        blt $t1 $t2 bltMenor3
+            li $a1 0
+            jump bltEnd3
+    _bltMenor3
+            li $a1 1
+    _bltEnd3
+        jal print
+
+    jr
+
+; Teste branch if less or equals than | if t1 <= t2 goto 
+_testBle
+    ; Teste 1 para maior            
+        li $t1 100
+        li $t2 60
+        ble $t1 $t2 bleMenorIgual
+            li $a1 1
+            jump bleEnd
+    _bleMenorIgual
+            li $a1 0
+    _bleEnd
+        jal print
+
+    ; Teste 2 para igual
+        li $t1 100
+        li $t2 100
+        ble $t1 $t2 bleMenorIgual2
+            li $a1 0
+            jump bleEnd2
+    _bleMenorIgual2
+            li $a1 1
+    _bleEnd2
+        jal print
+
+    ; Teste 3 para menor 
+        li $t1 100
+        li $t2 150
+        ble $t1 $t2 bleMenorIgual3
+            li $a1 0
+            jump bleEnd3
+    _bleMenorIgual3
+            li $a1 1
+    _bleEnd3
+        jal print
+
+    jr
+
+
+_divisao
+    li $a1 999999
+    jal print
+    jr
+
+_main
+    jal testBeq
+    jal cleanRegs
+
+    jal divisao
+
+    jal testBne
+    jal cleanRegs
+
+    jal divisao
+
+    jal testBgt
+    jal cleanRegs
+
+    jal divisao
+
+    jal testBge
+    jal cleanRegs
+
+    jal divisao
+
+    jal testBlt
+    jal cleanRegs
+
+    jal divisao
+
+    jal testBle
+    jal cleanRegs
