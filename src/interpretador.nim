@@ -7,6 +7,9 @@
 # | subi      | registrador | registrador | valor       |
 # | move      | registrador | registrador
 # |
+# | beq       | registrador | registrador | ponto        |
+# | bne       | registrador | registrador | ponto        |
+# |
 # | jump      | valor
 # | jal       | valor
 # | jr      

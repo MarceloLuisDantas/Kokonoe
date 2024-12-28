@@ -75,8 +75,11 @@ proc setR(self: Processador, r: int, v: int) =
 # | subi      | registrador | registrador | valor       |
 # | move      | registrador | registrador
 # |
-# | jump      | valor
-# | jal       | valor
+# | beq       | registrador | registrador | ponto        |
+# | bne       | registrador | registrador | ponto        |
+# |
+# | jump      | ponto
+# | jal       | ponto
 # | jr        | registrador
 # | jr
 # |
@@ -129,7 +132,6 @@ proc bne(self: Processador, regis1: string, regis2: string, pulo: string) =
     let valor2 = self.getR(regToIndex(regis2))
     if valor1 != valor2 :
         self.programCounter = self.jumpPoints[pulo]
-
 
 # Seta qual syscall sera chamada
 proc ssc(self: Processador, v: int) =
