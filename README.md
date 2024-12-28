@@ -45,13 +45,15 @@ Registrador que armazena o ponto de pulo ao utilizar jal, utilizado pelo jr para
 Registrador reservado para uso interno
 
 ## Instruções
-| Instrução | argumento 1    | argumento 2 | argumento 3 |
-| :-------- | :------------: | :---------: | :---------: |
-| add       | registrador    | registrador | registrador |
-| addi      | registrador    | registrador | valor       |
-| sub       | registrador    | registrador | registrador |
-| subi      | registrador    | registrador | valor       |
+| Instrução | argumento 1    | argumento 2 | argumento 3   |
+| :-------- | :------------: | :---------: | :-----------: |
+| add       | registrador    | registrador | registrador   |
+| addi      | registrador    | registrador | valor         |
+| sub       | registrador    | registrador | registrador   |
+| subi      | registrador    | registrador | valor         |
 | move      | registrador    | registrador
+| beq       | registrador    | registrador | ponto de jump |
+| bne       | registrador    | registrador | ponto de jump |
 | li        | registrador    | valor
 | jump      | ponto de jump
 | jal       | ponto de jump
@@ -64,6 +66,8 @@ Registrador reservado para uso interno
 - `sub #reg1 #reg2 #reg3` - Aloca em reg1 a subtração entre os valores de reg2 e reg3
 - `subi #reg1 #reg2 valor` - Aloca em reg1 a subtração do valore em reg 2 com o valor passado
 - `move #reg1 #reg2` - Move o valor de reg2 para reg1, é apenas um aptalho para `add #reg1 $ZERO #reg2`
+- `beq #reg1 #reg2 ponto_de_jump` - Se reg1 for igual a reg2 pula para o ponto de pulo
+- `bne #reg1 #reg2 ponto_de_jump` - Se reg1 for diferente de reg2 pula para o ponto de pulo
 - `li #reg1 valor` - Aloca em reg1 o valor passado, é apenas um atalho para `addi #reg1 $ZERO valor`
 - `jump ponto_de_jump` - Move a execução do codigo para outra linha (um goto)
 - `jal ponto_de_jump` - Move a execução do codigo para outra linha, e salva a linha original no registrador $ra
@@ -77,7 +81,7 @@ Imprime na tela o valor armazenado no registrador $a1
 
 
 # TO DO
-Implementação de condicionais
+Melhorar as condicionais
 Implementação de uma memoria fora os registradores
 Implementação de mais syscalls
 Implementação de uso de strings
