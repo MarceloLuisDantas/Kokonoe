@@ -24,6 +24,7 @@ Kokonoe suporta alguns comandos comuns de shell, dentre eles;
 | #r18 .. r30 |             | SIM      | em trabalho, podem ser utilizados por hora
 | #r30        | $ra         | NÂO      | Reservado para armazenar o ponto de retorno
 | #r31        | $sv         | SIM      | Reservado para setar chamada de syscall
+
 PS: Todos os registradores são editaveis (exceto o ZERO que é hardcoded), mas não é recomendado utilizar os marcados como não editaveis
 
 ### #r0 ou $ZERO
