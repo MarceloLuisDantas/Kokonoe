@@ -55,7 +55,7 @@ proc sintaxeSsc*(args: seq[string]): string =
         discard parseInt(args[0])
         return "ok"
     except :
-        return args[0] & " não é um valor passado invalido"
+        return args[0] & " não é um valor valido"
 
 proc sintaxeSyscall*(args: seq[string]): string =
     if args.len() != 0 :
@@ -110,9 +110,28 @@ proc sintaxeJr*(linha: seq[string]): string =
 # "beq", "bne", "bgt", "bge", "blt", "ble",  
 proc sintaxeBranch*(args: seq[string]): string =
     if (args.len() != 3) :
-        return "Branchs recebem 3 aparametros, 2 registradores e 1 inteiro"
+        return "Branchs recebem 3 parametros, 2 registradores e 1 inteiro"
     if not registradoresValidos(args[0..1]) :
         return "1 ou mais registradores invalidos"
     if not apenasLetras(args[2]) :
         return "Pontos de pulo podem possuir apenas letras"
     return "ok"
+
+proc sintaxeSlt*(args: seq[string]): string =
+    if (args.len() != 3) :
+        return "slt recebe 3 parametros, 3 registradores"
+    if not registradoresValidos(args) :
+        return "1 ou mais registradores invalidos"
+    return "ok"
+
+proc sintaxeSlti*(args: seq[string]): string =
+    if (args.len() != 3) :
+        return "slti recebe 3 parametros, 2 registradores e 1 valor para comparação"
+    if not registradoresValidos(args[0..1]) :
+        return "1 ou mais registradores invalidos"
+
+    try :
+        discard parseInt(args[2])
+        return "ok"
+    except :
+        return args[2] & " não é um valor valido"

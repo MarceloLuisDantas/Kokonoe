@@ -75,8 +75,11 @@ proc setR(self: Processador, r: int, v: int) =
 # | subi      | registrador | registrador | valor       |
 # | move      | registrador | registrador
 # |
-# | beq       | registrador | registrador | ponto        |
-# | bne       | registrador | registrador | ponto        |
+# | beq       | registrador | registrador | ponto       |
+# | bne       | registrador | registrador | ponto       |
+# |
+# | slt       | registrador | registrador | registrador |
+# | slti      | registrador | registrador | valor
 # |
 # | jump      | ponto
 # | jal       | ponto
@@ -133,6 +136,22 @@ proc bne(self: Processador, regis1: string, regis2: string, pulo: string) =
     if valor1 != valor2 :
         self.programCounter = self.jumpPoints[pulo]
 
+proc slt(self: Processador, r1: string, r2: string, r3: string) =
+    let valor1 = self.getR(regToIndex(r2))
+    let valor2 = self.getR(regToIndex(r3))
+    if valor1 < valor2 :
+        self.setR(regToIndex(r1), 1)
+    else :
+        self.setR(regToIndex(r1), 0)
+
+proc slti(self: Processador, r1: string, r2: string, comp: int) =
+    let valor = self.getR(regToIndex(r2))
+    if valor < comp :
+        self.setR(regToIndex(r1), 1)
+    else :
+        self.setR(regToIndex(r1), 0)
+
+
 # Seta qual syscall sera chamada
 proc ssc(self: Processador, v: int) =
     self.setR(regToIndex("$sv"), v)
@@ -180,6 +199,8 @@ proc exec*(self: Processador, instrucao: Instrucao) =
       of "move"    : self.add(args[0], "$ZERO", args[1])
       of "beq"     : self.beq(args[0], args[1], args[2])
       of "bne"     : self.bne(args[0], args[1], args[2])
+      of "slt"     : self.slt(args[0], args[1], args[2])
+      of "slti"    : self.slti(args[0], args[1], args[2].parseInt())
       of "jump"    : self.jump(args[0])
       of "jal"     : self.jal(args[0])
       of "jr"      : self.jr()

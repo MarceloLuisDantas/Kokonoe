@@ -1,0 +1,44 @@
+jump main
+
+_resettemps
+    li $t1 0
+    li $t2 0
+    li $t3 0
+    jr
+
+_print
+    ssc 1
+    syscall
+    jr
+
+_maior
+    li $a1 0
+    jump end
+
+_menor
+    li $a1 1
+    jump end
+
+_main
+    li  $t1 100
+    li  $t2 200
+
+    slt $t3 $t1 $t2
+    beq $t3 $ZERO maior
+    jal menor
+_end
+    jal print
+
+    jal resettemps
+    li $t1 100
+    ; se t1 < 50, t2 = 1
+    slti $t2 $t1 50
+    beq $t2 $ZERO else        ; if t1 > 50 :
+    ; t2 = 1                  ;     a1 = 1
+    li $a1 1                  ; else :   
+    jump endd                 ;     a1 = 0
+_else                         ; print a1
+    ; t2 = 0
+    li $a1 0
+_endd
+    jal print

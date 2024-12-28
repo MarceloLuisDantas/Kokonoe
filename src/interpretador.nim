@@ -7,8 +7,11 @@
 # | subi      | registrador | registrador | valor       |
 # | move      | registrador | registrador
 # |
-# | beq       | registrador | registrador | ponto        |
-# | bne       | registrador | registrador | ponto        |
+# | beq       | registrador | registrador | ponto       |
+# | bne       | registrador | registrador | ponto       |
+# |
+# | slt       | registrador | registrador | registrador |
+# | slti      | registrador | registrador | valor
 # |
 # | jump      | valor
 # | jal       | valor
@@ -26,7 +29,8 @@ import tables
 
 let instructions = @[
     "add", "addi", "sub", "subi", "move", "li", 
-    "beq", "bne", "bgt", "bge", "blt", "ble",  
+    "beq", "bne", "bgt", "bge", "blt", "ble",
+    "slt", "slti",  
     "jump", "jal", "jr",
     "ssc", "syscall", "showmem"
 ]
@@ -88,6 +92,8 @@ proc checkSintaxe(instrucao: string, args: seq[string]): string =
       of "jr"           : return sintaxeJr(args)
       of "ssc"          : return sintaxeSsc(args)
       of "syscall"      : return sintaxeSyscall(args)
+      of "slt"          : return sintaxeSlt(args)
+      of "slti"         : return sintaxeSlti(args)
       of "beq", "bne", "bgt", "bge", "blt", "ble" :
                           return sintaxeBranch(args)
 
