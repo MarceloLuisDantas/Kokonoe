@@ -1,5 +1,5 @@
 # Kokonoe
-Kokonoe é um simulador de um Processador simples, tendo um Assembly similar ao conjunto de instruções e registradores MIPS. 
+Kokonoe é um interpretador simples, baseado em Assembly de MIPS, tudo funciona em cima de um "processador" simulado.
 
 ## Basico do Basico
 Os scripts executaveis possuem a extenção .kn, eles não possuem identação obrigatoria, porem cada comando precisa ser escrito em 1 linha e 1 linha apenas. Os comentarios são possiveis, tudo que estiver depois de um ; sera considerado um comentario.
