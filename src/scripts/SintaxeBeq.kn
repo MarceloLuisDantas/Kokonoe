@@ -1,0 +1,4 @@
+
+    beq $t1 $t2 
+    beq $t1 $t2
+    beq $

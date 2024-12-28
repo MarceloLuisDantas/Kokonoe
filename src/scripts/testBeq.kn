@@ -1,0 +1,26 @@
+jump main
+
+_adiciona
+    addi        $a1 $a1 1
+    jr
+
+_print
+    ssc         1
+    syscall
+    jr
+
+_somaCem
+    li          $a2 100
+
+_start
+    bne         $a1 $a2 end
+    jr
+
+_end
+    jal         adiciona    
+    jump        start
+
+_main
+    li          $a1 1
+    jal         somaCem
+    jal         print

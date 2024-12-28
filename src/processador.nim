@@ -1,6 +1,7 @@
 from strutils import parseInt
-import tables
+from os       import sleep
 
+import tables
 type Instrucao* = tuple
     op: string
     args: seq[string]
@@ -21,6 +22,7 @@ type Processador* = ref object
     programStack: seq[Instrucao]
     programCounter: int
     jumpPoints*: TableRef[string, int]
+    recursionStack: seq[int]
 
 func newProcessador*(): Processador =
     Processador(programCounter: 0)
@@ -63,10 +65,6 @@ func getR(self: Processador, r: int): int =
 proc setR(self: Processador, r: int, v: int) =
     if (r != 0) :
         self.registradores[r] = v
-
-proc getNextInstruction(self: Processador): Instrucao =
-    return self.programStack[self.programCounter]
-
 
 # Instruções do processador
 # | Instrução | argumento 1 | argumento 2 | argumento 3 |
@@ -112,11 +110,26 @@ proc jump(self: Processador, point: string) =
     self.programCounter = self.jumpPoints[point]
 
 proc jal(self: Processador, point: string) =
+    self.recursionStack.add(self.getR(regToIndex("$ra")))
     self.setR(regToIndex("$ra"), self.programCounter)
     self.programCounter = self.jumpPoints[point]
 
 proc jr(self: Processador) =
-    self.programCOunter = self.getR(regToIndex("$ra"))
+    self.programCounter = self.getR(regToIndex("$ra"))
+    self.setR(regToIndex("$ra"), self.recursionStack.pop)
+
+proc beq(self: Processador, regis1: string, regis2: string, pulo: string) =
+    let valor1 = self.getR(regToIndex(regis1))
+    let valor2 = self.getR(regToIndex(regis2))
+    if valor1 == valor2 :
+        self.programCounter = self.jumpPoints[pulo]
+
+proc bne(self: Processador, regis1: string, regis2: string, pulo: string) =
+    let valor1 = self.getR(regToIndex(regis1))
+    let valor2 = self.getR(regToIndex(regis2))
+    if valor1 != valor2 :
+        self.programCounter = self.jumpPoints[pulo]
+
 
 # Seta qual syscall sera chamada
 proc ssc(self: Processador, v: int) =
@@ -125,6 +138,9 @@ proc ssc(self: Processador, v: int) =
 # Syscalls
 proc printInteiro(self: Processador) =
     echo self.getR(regToIndex("$a1"))
+
+proc stop() =
+    sleep(1000)
 
 # Mostra todos os valores da memoria
 proc showMem(self: Processador) =
@@ -146,8 +162,10 @@ proc callSyscall(self: Processador) =
     let op = self.getR(regToIndex("$sv"))
     case op
       of 1 : self.printInteiro()
+      of 2 : stop()
       else : return
 
+# "beq", "bne", "bgt", "bge", "blt", "ble",  
 # Recebe um comando e seus argumentos e executa
 proc exec*(self: Processador, instrucao: Instrucao) =
     let args = instrucao.args
@@ -158,6 +176,8 @@ proc exec*(self: Processador, instrucao: Instrucao) =
       of "subi"    : self.subi(args[0], args[1], args[2])
       of "li"      : self.addi(args[0], "$ZERO", args[1])
       of "move"    : self.add(args[0], "$ZERO", args[1])
+      of "beq"     : self.beq(args[0], args[1], args[2])
+      of "bne"     : self.bne(args[0], args[1], args[2])
       of "jump"    : self.jump(args[0])
       of "jal"     : self.jal(args[0])
       of "jr"      : self.jr()

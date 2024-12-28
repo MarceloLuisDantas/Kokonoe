@@ -106,3 +106,13 @@ proc sintaxeJr*(linha: seq[string]): string =
     if linha.len() != 0 :
         return "jr não recebe parametros"
     return "ok"
+
+# "beq", "bne", "bgt", "bge", "blt", "ble",  
+proc sintaxeBranch*(args: seq[string]): string =
+    if (args.len() != 3) :
+        return "Branchs recebem 3 aparametros, 2 registradores e 1 inteiro"
+    if not registradoresValidos(args[0..1]) :
+        return "1 ou mais registradores invalidos"
+    if not apenasLetras(args[2]) :
+        return "Pontos de pulo podem possuir apenas letras"
+    return "ok"

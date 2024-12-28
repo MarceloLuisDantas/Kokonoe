@@ -14,11 +14,6 @@
 # | ssc       | valor       |
 # | syscall   
 # | showmem 
-#
-# add  $t1 $t2 $t3 - t1 = t2 + t3
-# addi $t1 $t2 100 - t1 = t2 + 100
-# sub  $t1 $t2 $t3 - t1 = t2 - t3
-# subi $t1 $t2 100 - t1 = t2 - 100
 
 import processador
 import sintaxes
@@ -28,6 +23,7 @@ import tables
 
 let instructions = @[
     "add", "addi", "sub", "subi", "move", "li", 
+    "beq", "bne", "bgt", "bge", "blt", "ble",  
     "jump", "jal", "jr",
     "ssc", "syscall", "showmem"
 ]
@@ -83,12 +79,15 @@ proc checkSintaxe(instrucao: string, args: seq[string]): string =
       of "addi", "subi" : return sintaxeAddiSubi(args)
       of "move"         : return sintaxeMove(args)
       of "li"           : return sintaxeLi(args)
-      of "ssc"          : return sintaxeSsc(args)
-      of "syscall"      : return sintaxeSyscall(args)
       of "jumppoint"    : return sintaxeJumpPoint(args)
       of "jump"         : return sintaxeJump(args)
       of "jal"          : return sintaxeJal(args)
       of "jr"           : return sintaxeJr(args)
+      of "ssc"          : return sintaxeSsc(args)
+      of "syscall"      : return sintaxeSyscall(args)
+      of "beq", "bne", "bgt", "bge", "blt", "ble" :
+                          return sintaxeBranch(args)
+
       else : return "O dev esqueceu de implementar isso pelo visto"
 
 # Detecta erros de sintaxe
