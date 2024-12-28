@@ -1,5 +1,5 @@
 # Kokonoe
-Kokonoe é um simulador de um Processador simples, tendo um Assembly similar ao conjunto de instruções e registradores MIPS. 
+Kokonoe é um interpretador simples, baseado em Assembly de MIPS, tudo funciona em cima de um "processador" simulado.
 
 ## Basico do Basico
 Os scripts executaveis possuem a extenção .kn, eles não possuem identação obrigatoria, porem cada comando precisa ser escrito em 1 linha e 1 linha apenas. Os comentarios são possiveis, tudo que estiver depois de um ; sera considerado um comentario.
@@ -24,6 +24,7 @@ Kokonoe suporta alguns comandos comuns de shell, dentre eles;
 | #r18 .. r30 |             | SIM      | em trabalho, podem ser utilizados por hora
 | #r30        | $ra         | NÂO      | Reservado para armazenar o ponto de retorno
 | #r31        | $sv         | SIM      | Reservado para setar chamada de syscall
+
 PS: Todos os registradores são editaveis (exceto o ZERO que é hardcoded), mas não é recomendado utilizar os marcados como não editaveis
 
 ### #r0 ou $ZERO
