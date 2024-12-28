@@ -52,9 +52,11 @@ Registrador reservado para uso interno
 | sub       | registrador    | registrador | registrador   |
 | subi      | registrador    | registrador | valor         |
 | move      | registrador    | registrador
+| li        | registrador    | valor
 | beq       | registrador    | registrador | ponto de jump |
 | bne       | registrador    | registrador | ponto de jump |
-| li        | registrador    | valor
+| slt       | registrador    | registrador | registrador   |
+| slti      | registrador    | registrador | valor de comp |
 | jump      | ponto de jump
 | jal       | ponto de jump
 | jr        |
@@ -66,9 +68,11 @@ Registrador reservado para uso interno
 - `sub #reg1 #reg2 #reg3` - Aloca em reg1 a subtração entre os valores de reg2 e reg3
 - `subi #reg1 #reg2 valor` - Aloca em reg1 a subtração do valore em reg 2 com o valor passado
 - `move #reg1 #reg2` - Move o valor de reg2 para reg1, é apenas um aptalho para `add #reg1 $ZERO #reg2`
+- `li #reg1 valor` - Aloca em reg1 o valor passado, é apenas um atalho para `addi #reg1 $ZERO valor`
 - `beq #reg1 #reg2 ponto_de_jump` - Se reg1 for igual a reg2 pula para o ponto de pulo
 - `bne #reg1 #reg2 ponto_de_jump` - Se reg1 for diferente de reg2 pula para o ponto de pulo
-- `li #reg1 valor` - Aloca em reg1 o valor passado, é apenas um atalho para `addi #reg1 $ZERO valor`
+- `slt #reg1 #reg2 #reg3` - se reg2 < reg3, reg1 é setado para 1, caso contrario, reg1 é 0 
+- `slti #reg1 #reg2 valor` - se reg2 < valor, reg1 é setado para 1, caso contrario, reg1 é 0
 - `jump ponto_de_jump` - Move a execução do codigo para outra linha (um goto)
 - `jal ponto_de_jump` - Move a execução do codigo para outra linha, e salva a linha original no registrador $ra
 - `jr` - Retorna para o ponto armazenado em $ra
