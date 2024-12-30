@@ -1,5 +1,5 @@
 # Kokonoe
-Kokonoe é um interpretador simples, baseado em Assembly de MIPS, tudo funciona em cima de um "processador" simulado.
+Kokonoe é uma maquina virtual, inspirada em arquitetura MIPS. A ideia é criar um processador e um set de instruções baseadas no conjunto MIPS.
 
 ## Basico do Basico
 Os scripts executaveis possuem a extenção .kn, eles não possuem identação obrigatoria, porem cada comando precisa ser escrito em 1 linha e 1 linha apenas. Os comentarios são possiveis, tudo que estiver depois de um ; sera considerado um comentario.
@@ -83,6 +83,9 @@ Registrador reservado para uso interno
 ## Syscalls
 ### ssc 1 - printInteiro
 Imprime na tela o valor armazenado no registrador $a1
+
+### ssc 2 - printInteiro
+Recebe do usuario um numero inteiro e armazena em $v1
 
 
 # TO DO

@@ -1,11 +1,13 @@
-
-    li $t1 1
+    li $a1 0
+    li $t1 1000000
     ssc 1
 
-_soma
+_while
+    beq $a1 $t1 _end
     addi $a1 $a1 1
     syscall
-    jump soma
+    jump _while
 
-
+_end
+    syscall
 

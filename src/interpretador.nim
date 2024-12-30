@@ -56,7 +56,7 @@ func tokenizer(entrada: string): Instrucao =
     if tokens.len() != 1 :
         return newInstrucao(tokens[0], tokens[1..^1])
     if isJumpPoint(tokens[0]) : 
-        return newInstrucao("jumppoint", @[tokens[0][1..^1]])
+        return newInstrucao("jumppoint", @[tokens[0]])
     return newInstrucao(tokens[0], @[])
 
 # Faz a limpeza do script, revomendo espaços extras e comentarios
@@ -116,9 +116,9 @@ proc getJumpPoints(script: seq[string]): (string, TableRef[string, int]) =
     for i, v in script :
         if v[0] == '_' :
             if points.hasKey(v) :
-                let msg = "Multiplos pontos com o nome " & v[1..^1] & "\n - linha " & $points[v] & "\n - linha " & $i
+                let msg = "Multiplos pontos com o nome " & v & "\n - linha " & $points[v] & "\n - linha " & $i
                 return (msg, points)
-            points[v[1..^1]] = i
+            points[v] = i
     return ("ok", points)    
 
 proc getComandoRepl*(entrada: string): Instrucao =

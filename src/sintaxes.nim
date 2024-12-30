@@ -63,6 +63,12 @@ proc sintaxeSyscall*(args: seq[string]): string =
     return "ok"
 
 proc jumpNameValido(nome: string): string =
+    if nome[0] != '_' :
+        return "Pontos de Pulo precisam iniciar com o '_'"
+
+    if nome.len() < 2 :
+        return "Pontos de Pulo devem possuir no minimo 2 caracteres"
+
     let simbulosValidos = "qwertyuiopasdfghjklzxcvbnm123456789_"
     for i in toLowerAscii(nome) :
         if simbulosValidos.find(i) == -1 :

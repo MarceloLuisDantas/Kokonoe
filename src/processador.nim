@@ -188,8 +188,11 @@ proc ssc(self: Processador, v: int) =
 proc printInteiro(self: Processador) =
     echo self.getR(regToIndex("$a1"))
 
-proc stop() =
-    sleep(1000)
+proc getInteiro(self: Processador) =
+    let entrada = stdin.readLine()
+    let inteiro = entrada.parseInt()
+    self.setR(regToIndex("$v1"), inteiro)       
+
 
 # Mostra todos os valores da memoria
 proc showMem(self: Processador) =
@@ -213,7 +216,7 @@ proc callSyscall(self: Processador) =
     let op = self.getR(regToIndex("$sv"))
     case op
       of 1 : self.printInteiro()
-      of 2 : stop()
+      of 2 : self.getInteiro()
       else : return
 
 # "beq", "bne", "bgt", "bge", "blt", "ble",  

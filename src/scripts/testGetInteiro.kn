@@ -1,0 +1,27 @@
+jump _main
+
+_getInteiro
+    ssc 2
+    syscall
+    jr
+
+_print
+    ssc 1
+    syscall
+    jr
+
+_somaNumeros
+    add $v1 $a1 $a2
+    jr
+
+_main 
+    jal _getInteiro
+    move $a1 $v1
+
+    jal _getInteiro
+    move $a2 $v1
+
+    jal _somaNumeros
+
+    move $a1 $v1
+    jal _print
